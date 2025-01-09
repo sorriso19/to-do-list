@@ -10,6 +10,7 @@ const btnRemove = document.querySelector('.todo-remove')
 const text = document.getElementsByClassName('.text-todo')
 
 
+
 const todo = JSON.parse(localStorage.getItem("todo"));
 
 
@@ -67,12 +68,12 @@ todoControl.addEventListener('submit', function(event) {
 })
 
 function updateLocalStorage() {
-    const todosEls = document.querySelectorAll("li");
+    const li = document.querySelectorAll("li");
     const toDoData = [];
-    todosEls.forEach((toDoData) => {
+    toDoData.forEach(function() {
       toDoData.push({
-        text: todosEls.innerText,
-        completed: todosEls.classList.contains("completed"),
+        text: headerInput.innerText,
+        completed: todoCompleted.classList.contains("completed"),
       });
     });
   
@@ -85,7 +86,7 @@ function updateLocalStorage() {
         localStorage.removeItem('li')
     }
   })
-  
+
   window.addEventListener('storage', ({ key, newValue: value }) => {  
 	
 	toDoData.push(value);
