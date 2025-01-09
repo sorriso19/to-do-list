@@ -3,15 +3,9 @@
 const todoControl = document.querySelector('.todo-control')
 const headerInput = document.querySelector('.header-input')
 const todoList = document.querySelector('.todo-list')
-const todosElems = document.getElementsByClassName('.todo')
 const todoCompleted = document.querySelector('.todo-completed')
-const addBtn = document.querySelector('.header-button')
-const btnRemove = document.querySelector('.todo-remove')
-const text = document.getElementsByClassName('.text-todo')
 
 
-
-const todo = JSON.parse(localStorage.getItem("todo"));
 
 
 
@@ -44,51 +38,52 @@ const render = function() {
         li.querySelector('.todo-complete').addEventListener('click', function() {
             item.completed = !item.completed
         
+        function deleteTasks() {
+                toDoData = toDoData.filter(todo => todo.id !== id);
+                renderTasks();
+                saveTasks();
+            }
+        const deleteButton = document.createElement('button');
+        li.querySelector('.todo-remove').addEventListener('click', () => {
+            deleteTasks(li);
+        });
+        
+        
             render()
         })
        
             
-        })
+    })
+}
+
+    function saveTasks() {
+        localStorage.setItem('todoData', JSON.stringify(toDoData));
+    }
+
+    function loadTasks() {
+        const storedTasks = localStorage.getItem('toDoData');
+        if (storedTasks) {
+            toDoData = JSON.parse(storedTasks);
+            render();
+        }
     }
    
 
 todoControl.addEventListener('submit', function(event) {
     event.preventDefault()
+    const text = headerInput.value.trim();
+    if (text !== '') {
 
     const newToDo = {
+        
         text: headerInput.value,
         completed: false
     }
 
     toDoData.push(newToDo)
     headerInput.value = ''
-
+    }
     
     render()
 })
 
-function updateLocalStorage() {
-    const li = document.querySelectorAll("li");
-    const toDoData = [];
-    toDoData.forEach(function() {
-      toDoData.push({
-        text: headerInput.innerText,
-        completed: todoCompleted.classList.contains("completed"),
-      });
-    });
-  
-    localStorage.setItem("todo", JSON.stringify(toDoData));
-  }
-
-
-  btnRemove.addEventListener('click', function() {
-    if(todoCompleted){
-        localStorage.removeItem('li')
-    }
-  })
-
-  window.addEventListener('storage', ({ key, newValue: value }) => {  
-	
-	toDoData.push(value);
-	render();
-});
