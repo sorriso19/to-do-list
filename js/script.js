@@ -5,11 +5,11 @@ const headerInput = document.querySelector('.header-input')
 const todoList = document.querySelector('.todo-list')
 const todoCompleted = document.querySelector('.todo-completed')
 
+const toDoData = JSON.parse(localStorage.getItem('toDoData')) || []
 
-
-
-
-const toDoData = []
+const savetoDoData = function() {
+    localStorage.setItem('toDoData', JSON.stringify(toDoData))
+}
 
 
 const render = function() {
@@ -37,42 +37,28 @@ const render = function() {
     
         li.querySelector('.todo-complete').addEventListener('click', function() {
             item.completed = !item.completed
+        savetoDoData()
+        render()
         
-        function deleteTasks() {
-                toDoData = toDoData.filter(todo => todo.id !== id);
-                renderTasks();
-                saveTasks();
+          
+        li.querySelector('.todo-remove').addEventListener('click', function() {
+           
+            if(todoCompleted) {
+                localStorage.removeItem('li')
             }
-        const deleteButton = document.createElement('button');
-        li.querySelector('.todo-remove').addEventListener('click', () => {
-            deleteTasks(li);
+            
         });
-        
-        
+            savetoDoData() 
             render()
         })
-       
-            
     })
 }
-
-    function saveTasks() {
-        localStorage.setItem('todoData', JSON.stringify(toDoData));
-    }
-
-    function loadTasks() {
-        const storedTasks = localStorage.getItem('toDoData');
-        if (storedTasks) {
-            toDoData = JSON.parse(storedTasks);
-            render();
-        }
-    }
-   
-
-todoControl.addEventListener('submit', function(event) {
+                
+  
+    todoControl.addEventListener('submit', function(event) {
     event.preventDefault()
-    const text = headerInput.value.trim();
-    if (text !== '') {
+     
+    if (headerInput.value.trim() !== '') {
 
     const newToDo = {
         
@@ -82,8 +68,14 @@ todoControl.addEventListener('submit', function(event) {
 
     toDoData.push(newToDo)
     headerInput.value = ''
+   
     }
-    
+ 
     render()
-})
 
+    })
+
+           
+    
+    
+    
