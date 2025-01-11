@@ -4,11 +4,21 @@ const todoControl = document.querySelector('.todo-control')
 const headerInput = document.querySelector('.header-input')
 const todoList = document.querySelector('.todo-list')
 const todoCompleted = document.querySelector('.todo-completed')
+const toDoData = []
 
-const toDoData = JSON.parse(localStorage.getItem('toDoData')) || []
+const uploadLocalStorage = function() {
+    const uploadLocStor = localStorage.getItem('todoList')
+    if(uploadLocStor !== null) {
+        const saveTodo = JSON.parse(uploadLocStor)
+        saveTodo.forEach(function(item) {
+            toDoData.push(item)
+        })    
+        
+    }
+}
 
 const savetoDoData = function() {
-    localStorage.setItem('toDoData', JSON.stringify(toDoData))
+    localStorage.setItem('todoList', JSON.stringify(toDoData))
 }
 
 
@@ -17,7 +27,7 @@ const render = function() {
     todoCompleted.innerHTML = ''
 
           
-       toDoData.forEach(function(item) {
+       toDoData.forEach(function(item, index) {
               
         const li = document.createElement('li')
 
@@ -37,45 +47,45 @@ const render = function() {
     
         li.querySelector('.todo-complete').addEventListener('click', function() {
             item.completed = !item.completed
-        savetoDoData()
-        render()
         
+            render()
+            savetoDoData()
+        })
           
         li.querySelector('.todo-remove').addEventListener('click', function() {
            
-            if(todoCompleted) {
-                localStorage.removeItem('li')
-            }
-            
-        });
-            savetoDoData() 
+            li.remove()
+            toDoData.splice(index, 1)
             render()
+
+            if(toDoData.length !== 0) {
+                savetoDoData()
+            } else {
+                localStorage.removeItem('todoList')
+            }
         })
-    })
+            
+    });
+            
 }
                 
   
     todoControl.addEventListener('submit', function(event) {
     event.preventDefault()
-     
-    if (headerInput.value.trim() !== '') {
-
+   
     const newToDo = {
         
         text: headerInput.value,
         completed: false
     }
 
+    if (headerInput.value.trim() !== '') {
     toDoData.push(newToDo)
     headerInput.value = ''
-   
-    }
- 
+    savetoDoData()
     render()
-
-    })
-
-           
+    }
+}) 
     
-    
-    
+uploadLocalStorage()   
+document.addEventListener('DOMContentLoaded', render) 
